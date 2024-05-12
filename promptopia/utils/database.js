@@ -10,8 +10,10 @@ export const connectToDatabase = async () => {
     }
 
     try{
-        await mongoose.connect(process.env.MONGO_URI,{
-            dbName: process.env.MONGO_DBNAME,
+        console.log(process.env.MONGODB_URI);
+        console.log(process.env.MONGODB_DBNAME);
+        await mongoose.connect(process.env.MONGODB_URI,{
+            dbName: process.env.MONGODB_DBNAME,
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
