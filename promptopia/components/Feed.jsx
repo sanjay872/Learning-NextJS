@@ -21,9 +21,13 @@ const PromptCardList = ({data,handleTagClick}) => {
 const Feed = () => {
   const [searchText, setSearchText] = useState("");
   const [prompts, setPrompts] = useState([]);
+  const [searchTimeOut, setSearchTimeOut] = useState(null); // Timeout for search
+  
   const handleSearchChange = (e) => {
-
+    clearTimeout(searchTimeOut);
+    setSearchText(e.target.value);
   }
+  
   const fetchPrompts = async () => {
     const res = await fetch("/api/prompt");
     //console.log("before data");
@@ -34,16 +38,25 @@ const Feed = () => {
     //console.log(prompts);
   }
 
-  useEffect(() => {    // Fetch prompts
-    fetchPrompts();
-  },[])
+  useEffect(() => {
+    if(searchText.length > 0){
+      setSearchTimeOut(setTimeout(async () => {
+        //console.log(searchText);
+        const res = await fetch(`/api/prompt/search/${searchText}`);
+        const data = await res.json();
+        setPrompts(data);
+      }, 1000));
+    } else {
+      fetchPrompts();
+    }
+  },[searchText])    // Fetch prompts
 
   return (
     <section className="feed">
       <form className="relative w-full flex-center">
         <input 
           type="text"
-          placeholder="Search for a tag or a username....."
+          placeholder="Search for a tag or a content....."
           value={searchText}
           onChange={handleSearchChange}
           required
