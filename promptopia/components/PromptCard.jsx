@@ -9,6 +9,7 @@ const PromptCard = ({prompt,handleTagClick,handleEdit,handleDelete}) => {
   const [copied, setCopied] = useState("");
   const pathName = usePathname();
   const {data: session} = useSession();
+  const router = useRouter();
 
   const handleCopy = () => {
     setCopied(prompt.prompt);
@@ -16,6 +17,13 @@ const PromptCard = ({prompt,handleTagClick,handleEdit,handleDelete}) => {
     setTimeout(() => {
       setCopied("");
     }, 3000);
+  }
+
+  const handleViewProfile = () => {
+    if(session?.user.id === prompt.creator._id){
+      return router.push('/profile');
+    } 
+    router.push(`/profile/view/${prompt.creator._id}`);
   }
 
   return (
@@ -29,6 +37,7 @@ const PromptCard = ({prompt,handleTagClick,handleEdit,handleDelete}) => {
             width={40}
             height={40}
             className="rounded-full object-contain"
+            onClick={handleViewProfile}
           />
           <div className="flex flex-col">
             <h3 className="font=satoshi font-semibold

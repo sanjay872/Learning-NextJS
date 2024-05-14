@@ -27,6 +27,11 @@ const Feed = () => {
     clearTimeout(searchTimeOut);
     setSearchText(e.target.value);
   }
+
+  const handleTagClick = (tag) => {
+    tag = tag.replace("#",""); // Remove # from tag
+    setSearchText(tag);
+  }
   
   const fetchPrompts = async () => {
     const res = await fetch("/api/prompt");
@@ -41,7 +46,7 @@ const Feed = () => {
   useEffect(() => {
     if(searchText.length > 0){
       setSearchTimeOut(setTimeout(async () => {
-        //console.log(searchText);
+        console.log(searchText);
         const res = await fetch(`/api/prompt/search/${searchText}`);
         const data = await res.json();
         setPrompts(data);
@@ -65,7 +70,7 @@ const Feed = () => {
       </form>
       <PromptCardList 
         data={prompts}
-        handleTagClick={()=>{}}
+        handleTagClick={handleTagClick}
       />
     </section>
   )
